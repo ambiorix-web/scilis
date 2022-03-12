@@ -42,10 +42,7 @@ make_parser <- function(
   fn <- \(req) {
     ambiorix::default_cookie_parser(req) |> 
       lapply(\(cookie) {
-        if(length(cookie) != 2)
-          return(cookie)
-
-        unsign(cookie[2], secret)
+        unsign(cookie, secret)
       })
   }
 
@@ -66,11 +63,11 @@ make_preprocessor <- function(
 #' @importFrom digest hmac
 #' @importFrom base64enc base64encode
 sign <- function(value, secret) {
-  hash <- digest::hmac(
-    secret, 
-    value, 
-    algo = "sha256"
-  ) |> 
+  hash <- secret |> 
+    digest::hmac(
+      value, 
+      algo = "sha256"
+    ) |> 
     charToRaw() |> 
     base64enc::base64encode()
 
@@ -79,7 +76,7 @@ sign <- function(value, secret) {
 }
 
 #' @importFrom base64enc base64decode
-unsign <- function(secret, value) {
+unsign <- function(value, secret) {
   tentative_value <- strsplit(value, split = "\\.")[[1]][1]
   expected_input <- sign(tentative_value, secret)
   expected_raw <- charToRaw(expected_input)
