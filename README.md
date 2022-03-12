@@ -2,6 +2,8 @@
 
 Secure cookies for [ambiorix](https://ambiorix.dev).
 
+Signs (and unsigns) cookies to ensure they are not tempered with by clients.
+
 ## Installation
 
 Get it from Github.
