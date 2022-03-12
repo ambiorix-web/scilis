@@ -1,0 +1,18 @@
+Package: scilis
+Title: Secure Cookies for 'Ambiorix'
+Version: 0.0.0.9000
+Authors@R: 
+   c(
+        person("John", "Coene", , "john@opifex.org", role = c("aut", "cre")),
+        person(family = "Opifex", role = c("fnd", "cph"))
+    )
+Description: Sign and unsign cookies to ensure they
+    have not been tempered with.
+License: GPL (>= 2)
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
+Imports:
+    digest,
+    ambiorix (> 2.0.0),
+    base64enc
