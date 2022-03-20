@@ -77,7 +77,8 @@ sign <- function(value, secret) {
 
 #' @importFrom base64enc base64decode
 unsign <- function(value, secret) {
-  tentative_value <- strsplit(as.character(value), split = "\\.")[[1]][1]
+  value <- as.character(value)
+  tentative_value <- strsplit(value, split = "\\.")[[1]][1]
   expected_input <- sign(tentative_value, secret)
   expected_raw <- charToRaw(expected_input)
   input_raw <- charToRaw(value)
