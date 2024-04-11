@@ -72,13 +72,13 @@ sign <- function(value, secret) {
     base64enc::base64encode()
 
   hash <- gsub("\\=+$", "", hash)
-  paste0(value, ".", hash)
+  paste0(value, separator(), hash)
 }
 
 #' @importFrom base64enc base64decode
 unsign <- function(value, secret) {
   value <- as.character(value)
-  tentative_value <- strsplit(value, split = "\\.")[[1]][1]
+  tentative_value <- strsplit(value, split = separator())[[1]][1]
   expected_input <- sign(tentative_value, secret)
   expected_raw <- charToRaw(expected_input)
   input_raw <- charToRaw(value)
@@ -91,3 +91,9 @@ unsign <- function(value, secret) {
 
   return(tentative_value)
 }
+
+#' Separator
+#' 
+#' Used as the value to join and split at when signing and unsigning
+#' a cookie value, respectively.
+separator <- \() "devOpifex/scilis"
