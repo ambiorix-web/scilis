@@ -9,7 +9,7 @@ Signs (and unsigns) cookies to ensure they are not tempered with by clients.
 Get it from Github.
 
 ```r
-remotes::install_github("devOpifex/scilis")
+remotes::install_github("ambiorix-web/scilis")
 ```
 
 ## Example
