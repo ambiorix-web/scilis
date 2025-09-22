@@ -1,32 +1,33 @@
 #' Scilis
-#' 
+#'
 #' Signs (and unsigns) cookies to ensure they are not
 #' altered by clients.
-#' 
-#' @param secret Secret for has creation. 
+#'
+#' @param secret Secret for has creation.
 #' Ideally use an environment variable so as to keep
 #' this secret.
-#' 
+#'
 #' @details This signs the values of cookies with
-#' a base 64 encoded sha256 hash. Note that the 
+#' a base 64 encoded sha256 hash. Note that the
 #' value of the cookie is still visible.
 #' When cookies are being read the value is compared
 #' to the expected hash to ensure it was not altered
 #' by the client.
 #' If the cookie appears aletered the returned value
 #' is `character(0L)`.
-#' 
+#'
 #' @examples
 #' app <- ambiorix::Ambiorix$
 #'  new()$
 #'  use(scilis("secret"))
-#' 
-#' @export 
+#'
+#' @export
 scilis <- function(
   secret
 ) {
-  if(missing(secret))
+  if (missing(secret)) {
     stop("Missing `secret`")
+  }
 
   fns <- list(
     make_parser(secret),
@@ -40,7 +41,7 @@ make_parser <- function(
   secret
 ) {
   fn <- \(req) {
-    ambiorix::default_cookie_parser(req) |> 
+    ambiorix::default_cookie_parser(req) |>
       lapply(\(cookie) {
         unsign(cookie, secret)
       })
@@ -63,12 +64,12 @@ make_preprocessor <- function(
 #' @importFrom digest hmac
 #' @importFrom base64enc base64encode
 sign <- function(value, secret) {
-  hash <- secret |> 
+  hash <- secret |>
     digest::hmac(
-      as.character(value), 
+      as.character(value),
       algo = "sha256"
-    ) |> 
-    charToRaw() |> 
+    ) |>
+    charToRaw() |>
     base64enc::base64encode()
 
   hash <- gsub("\\=+$", "", hash)
@@ -83,17 +84,19 @@ unsign <- function(value, secret) {
   expected_raw <- charToRaw(expected_input)
   input_raw <- charToRaw(value)
 
-  if(length(expected_raw) != length(input_raw))
-    return(character(0L))
+  if (length(expected_raw) != length(input_raw)) {
+    return("INVALID COOKIE")
+  }
 
-  if(!all(input_raw == expected_raw))
-    return(character(0L))
+  if (!all(input_raw == expected_raw)) {
+    return("INVALID COOKIE")
+  }
 
-  return(tentative_value)
+  tentative_value
 }
 
 #' Separator
-#' 
+#'
 #' Used as the value to join and split at when signing and unsigning
 #' a cookie value, respectively.
 separator <- \() "devOpifex/scilis"
