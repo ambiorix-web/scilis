@@ -85,11 +85,11 @@ unsign <- function(value, secret) {
   input_raw <- charToRaw(value)
 
   if (length(expected_raw) != length(input_raw)) {
-    return("INVALID COOKIE")
+    return(invalid_cookie())
   }
 
   if (!all(input_raw == expected_raw)) {
-    return("INVALID COOKIE")
+    return(invalid_cookie())
   }
 
   tentative_value
@@ -100,3 +100,10 @@ unsign <- function(value, secret) {
 #' Used as the value to join and split at when signing and unsigning
 #' a cookie value, respectively.
 separator <- \() "devOpifex/scilis"
+
+invalid_cookie <- function() {
+  structure(
+    "INVALID COOKIE",
+    class = c("scilis_invalid_cookie", "character")
+  )
+}
